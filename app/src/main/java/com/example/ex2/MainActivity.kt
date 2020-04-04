@@ -1,4 +1,4 @@
-package com.example.ex1
+package com.example.ex2
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         button.setOnClickListener {
-            task.text = editText.text
+//            task. = editText.text
             editText.text.clear()
         }
     }
