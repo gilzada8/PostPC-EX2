@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -13,13 +14,9 @@ data class TodoTask(
     val complete: Boolean = false
 )
 
-fun createTodoTask(): List<TodoTask> {
-    val taskslist = mutableListOf<TodoTask>()
-    taskslist += TodoTask(taskString = "Complete EX2!", complete = false)
-    return taskslist
-}
 
 class TodoTaskHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val card: RelativeLayout = view.findViewById(R.id.todo_card)
     val taskText: TextView = view.findViewById(R.id.todo_text)
     val taskComplete: CheckBox = view.findViewById(R.id.todo_check)
 }
@@ -27,11 +24,6 @@ class TodoTaskHolder(view: View) : RecyclerView.ViewHolder(view) {
 class TodoTaskAdapter : RecyclerView.Adapter<TodoTaskHolder>() {
     private val _todoTasks: MutableList<TodoTask> = ArrayList()
 
-    fun setTasks(tasks: List<TodoTask>) {
-        _todoTasks.clear()
-        _todoTasks.addAll(tasks)
-        notifyDataSetChanged()
-    }
 
     fun addTask(task: String, complete: Boolean = false) {
         _todoTasks.add(TodoTask(task, complete))
@@ -57,9 +49,10 @@ class TodoTaskAdapter : RecyclerView.Adapter<TodoTaskHolder>() {
             Toast.LENGTH_SHORT
         )
 
-        holder.taskComplete.setOnClickListener {
-            if (holder.taskComplete.isChecked) {
+        holder.card.setOnClickListener {
+            if (!holder.taskComplete.isChecked) {
                 popMsg.show()
+                holder.taskComplete.isChecked = true
             }
         }
     }

@@ -1,13 +1,11 @@
 package com.example.ex2
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.todo_one.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +14,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val adapter = TodoTaskAdapter()
-        adapter.setTasks(createTodoTask())
 
         TodoTaskRV.adapter = adapter
         TodoTaskRV.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
