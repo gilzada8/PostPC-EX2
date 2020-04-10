@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = TodoTaskAdapter()
-
+        val adapter = TodoTaskAdapter(applicationContext)
+        adapter.loadTodoList()
         TodoTaskRV.adapter = adapter
         TodoTaskRV.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
