@@ -1,5 +1,7 @@
 package com.example.ex2
 
+import android.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
+
 data class TodoTask(
     val taskString: String,
-    val complete: Boolean = false
+    var complete: Boolean
 )
 
 
@@ -25,13 +28,16 @@ class TodoTaskAdapter : RecyclerView.Adapter<TodoTaskHolder>() {
     private val _todoTasks: MutableList<TodoTask> = ArrayList()
 
 
-    fun addTask(task: String, complete: Boolean = false) {
-        _todoTasks.add(TodoTask(task, complete))
+    fun addTask(task: String) {
+        _todoTasks.add(TodoTask(task, false))
         notifyItemInserted(_todoTasks.size - 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoTaskHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_one, parent, false)
+
+        Log.i("TodoLogger", _todoTasks.size.toString())
+
         return TodoTaskHolder(view)
     }
 
@@ -42,6 +48,7 @@ class TodoTaskAdapter : RecyclerView.Adapter<TodoTaskHolder>() {
     override fun onBindViewHolder(holder: TodoTaskHolder, position: Int) {
         val task = _todoTasks[position]
         holder.taskText.text = task.taskString
+        holder.taskComplete.isChecked = _todoTasks[position].complete
 
         val popMsg = Toast.makeText(
             holder.itemView.context,
@@ -53,7 +60,23 @@ class TodoTaskAdapter : RecyclerView.Adapter<TodoTaskHolder>() {
             if (!holder.taskComplete.isChecked) {
                 popMsg.show()
                 holder.taskComplete.isChecked = true
+                _todoTasks[position].complete = true
             }
         }
+
+        holder.card.setOnLongClickListener {
+            val builder =
+                AlertDialog.Builder(holder.itemView.context).setTitle("Are You Sure to delete?")
+            builder.setPositiveButton("I'm sure") { _, _ ->
+                _todoTasks.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, _todoTasks.size);
+            }
+            builder.setNegativeButton("Nope") { _, _ -> }
+            builder.show()
+            true
+        }
+
     }
 }
+
