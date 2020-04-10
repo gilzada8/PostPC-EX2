@@ -35,8 +35,10 @@ class TodoTaskAdapter(private val appContext: Context) : RecyclerView.Adapter<To
         val todoList = object : TypeToken<MutableList<TodoTask>>() {}.type
         val todoSP = appContext.getSharedPreferences("TodoSP", Context.MODE_PRIVATE)
             .getString("TodoSP", null)
-        val todoData: MutableList<TodoTask> = Gson().fromJson(todoSP, todoList)
-        _todoTasks.addAll(todoData)
+        if (todoSP != null) {
+            val todoData: MutableList<TodoTask> = Gson().fromJson(todoSP, todoList)
+            _todoTasks.addAll(todoData)
+        }
         Log.i("TodoLogger", _todoTasks.size.toString())
     }
 
