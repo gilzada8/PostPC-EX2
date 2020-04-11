@@ -13,8 +13,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = TodoTaskAdapter(applicationContext)
-        adapter.loadTodoList()
+        val todoData = TodoData(applicationContext)
+        val adapter = TodoTaskAdapter(applicationContext, todoData)
+        todoData.loadTodoList(applicationContext)
         TodoTaskRV.adapter = adapter
         TodoTaskRV.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             if (editText.text.isEmpty()) {
                 popMsg.show()
             } else {
-                adapter.addTask(editText.text.toString())
+                todoData.addTask(editText.text.toString(), adapter, applicationContext)
             }
             editText.text.clear()
         }
