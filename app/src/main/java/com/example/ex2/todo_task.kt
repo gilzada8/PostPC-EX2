@@ -2,6 +2,7 @@ package com.example.ex2
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,10 +54,16 @@ class TodoTaskAdapter(private val appContext: Context, private val todoData: Tod
         )
 
         holder.card.setOnClickListener {
-            if (!holder.taskComplete.isChecked) {
-                popMsg.show()
-                todoData.modifyTask(position, true)
-                holder.taskComplete.isChecked = todoData.todoTasks[position].complete
+            if (holder.taskComplete.isChecked) {
+//                popMsg.show()
+//                todoData.modifyTask(position, true)
+//                holder.taskComplete.isChecked = todoData.todoTasks[position].complete
+                val intent = Intent(appContext, CompletedActivity::class.java)
+                appContext.startActivity(intent)
+            } else {
+                val intent = Intent(appContext, NotCompletedActivity::class.java)
+//                intent.putExtra("keyIdentifier", value)
+                appContext.startActivity(intent)
             }
         }
 
