@@ -14,9 +14,11 @@ import java.util.*
 
 
 data class TodoTask(
-    val taskString: String,
-    var complete: Boolean,
-    val createTime: String = Calendar.getInstance().time.toString()
+    val taskString: String = "",
+    var complete: Boolean = false,
+    val createTime: String = Calendar.getInstance().time.toString(),
+    var editTime: String = createTime,
+    var id: String = ""
 )
 
 
@@ -62,7 +64,7 @@ class TodoTaskAdapter(private val appContext: Context, private val todoData: Tod
             val builder =
                 AlertDialog.Builder(holder.itemView.context).setTitle("Are You Sure to delete?")
             builder.setPositiveButton("I'm sure") { _, _ ->
-                todoData.deleteTask(position, this, appContext)
+                todoData.deleteTask(position, this)
             }
             builder.setNegativeButton("Nope") { _, _ -> }
             builder.show()

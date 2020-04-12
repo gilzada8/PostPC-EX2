@@ -13,34 +13,34 @@ data class TodoData(
     val todoCollectionRef: CollectionReference = db.collection("todoData")
 ) {
 
-    fun loadTodoList() {
+    fun loadTodoList(rv: TodoTaskAdapter) {
         todoCollectionRef.get().addOnSuccessListener { result ->
             for (document in result) {
-                todoTasks.add(document.toObject<TodoTask>())
+                todoTasks.add(document.toObject(TodoTask::class.java))
+                rv.notifyItemInserted(todoTasks.size - 1)
             }
         }
         Log.i("TodoLogger", todoTasks.size.toString())
     }
 
-    private fun saveTodoList(context: Context) {
-        for (todoTask in todoTasks) {
-            todoCollectionRef.add(todoTask) // TODO : add on success / fail
-        }
+    fun addTask(task: String, rv: TodoTaskAdapter) {
+        val todoTask = TodoTask(task, false)
+        todoCollectionRef.add(todoTask).addOnSuccessListener { docRef ->
+            docRef.update("id", docRef.id)
+            todoTask.id = docRef.id
+            todoTasks.add(todoTask)
+            rv.notifyItemInserted(todoTasks.size - 1)
+        } // TODO : add on fail
     }
 
-    fun addTask(task: String, rv: TodoTaskAdapter, context: Context) {
-        todoTasks.add(TodoTask(task, false))
-        saveTodoList(context)
-        rv.notifyItemInserted(todoTasks.size - 1)
-    }
-
-    fun deleteTask(position: Int, rv: TodoTaskAdapter, context: Context) {
+    fun deleteTask(position: Int, rv: TodoTaskAdapter) {
+        todoCollectionRef.document(todoTasks[position].id).delete() // TODO : add on fail
         todoTasks.removeAt(position)
-        saveTodoList(context)
         rv.notifyItemRemoved(position)
         rv.notifyItemRangeChanged(position, todoTasks.size)
     }
 
+    // TODO : check what to do when modify
     fun modifyTask(position: Int, isComplete: Boolean) {
         todoTasks[position].complete = isComplete
     }

@@ -15,9 +15,9 @@ class MainActivity : AppCompatActivity() {
 
         val todoData = TodoData(applicationContext)
         val adapter = TodoTaskAdapter(applicationContext, todoData)
-        todoData.loadTodoList(applicationContext)
         TodoTaskRV.adapter = adapter
         TodoTaskRV.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        todoData.loadTodoList(adapter)
 
 //      creating Toast once to avoid aggregation
         val popMsg = Toast.makeText(
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             if (editText.text.isEmpty()) {
                 popMsg.show()
             } else {
-                todoData.addTask(editText.text.toString(), adapter, applicationContext)
+                todoData.addTask(editText.text.toString(), adapter)
             }
             editText.text.clear()
         }
