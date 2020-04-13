@@ -9,31 +9,40 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val adapter = TodoTaskAdapter(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setButtonListener()
+    }
 
-        val todoData = TodoData(applicationContext)
-        val adapter = TodoTaskAdapter(applicationContext, todoData)
+    override fun onResume() {
+        super.onResume()
+        setRV()
+    }
+
+    private fun setRV() {
         TodoTaskRV.adapter = adapter
         TodoTaskRV.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        todoData.loadTodoList(adapter)
+        TodoData.loadTodoList(adapter)
+    }
 
+    private fun setButtonListener() {
 //      creating Toast once to avoid aggregation
         val popMsg = Toast.makeText(
             applicationContext,
             "Empty task might be fun, but not supported",
             Toast.LENGTH_SHORT
         )
-
         button.setOnClickListener {
             if (editText.text.isEmpty()) {
                 popMsg.show()
             } else {
-                todoData.addTask(editText.text.toString(), adapter)
+                TodoData.addTask(editText.text.toString(), adapter)
             }
             editText.text.clear()
         }
-
     }
+
 }

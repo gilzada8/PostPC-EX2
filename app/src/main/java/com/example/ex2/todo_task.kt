@@ -1,6 +1,5 @@
 package com.example.ex2
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,15 +8,15 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 data class TodoTask(
-    val taskString: String = "",
+    var taskString: String = "",
     var complete: Boolean = false,
-    val createTime: String = Calendar.getInstance().time.toString(),
+    val createTime: String = SimpleDateFormat("dd.MM.yyyy 'at' HH:mm").format(Calendar.getInstance().time),
     var editTime: String = createTime,
     var id: String = ""
 )
@@ -30,7 +29,7 @@ class TodoTaskHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 
-class TodoTaskAdapter(private val appContext: Context, private val todoData: TodoData) :
+class TodoTaskAdapter(private val appContext: Context) :
     RecyclerView.Adapter<TodoTaskHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoTaskHolder {
@@ -39,44 +38,24 @@ class TodoTaskAdapter(private val appContext: Context, private val todoData: Tod
     }
 
     override fun getItemCount(): Int {
-        return todoData.todoTasks.size
+        return TodoData.todoTasks.size
     }
 
     override fun onBindViewHolder(holder: TodoTaskHolder, position: Int) {
-        val task = todoData.todoTasks[position]
+        val task = TodoData.todoTasks[position]
         holder.taskText.text = task.taskString
-        holder.taskComplete.isChecked = todoData.todoTasks[position].complete
-
-        val popMsg = Toast.makeText(
-            holder.itemView.context,
-            "TODO " + holder.taskText.text + " is now DONE. BOOM!",
-            Toast.LENGTH_SHORT
-        )
+        holder.taskComplete.isChecked = TodoData.todoTasks[position].complete
 
         holder.card.setOnClickListener {
-            if (holder.taskComplete.isChecked) {
-//                popMsg.show()
-//                todoData.modifyTask(position, true)
-//                holder.taskComplete.isChecked = todoData.todoTasks[position].complete
-                val intent = Intent(appContext, CompletedActivity::class.java)
-                appContext.startActivity(intent)
+            val intent = if (holder.taskComplete.isChecked) {
+                Intent(appContext, CompletedActivity::class.java)
             } else {
-                val intent = Intent(appContext, NotCompletedActivity::class.java)
-//                intent.putExtra("keyIdentifier", value)
-                appContext.startActivity(intent)
+                Intent(appContext, NotCompletedActivity::class.java)
             }
+            intent.putExtra("position", position)
+            appContext.startActivity(intent)
         }
 
-        holder.card.setOnLongClickListener {
-            val builder =
-                AlertDialog.Builder(holder.itemView.context).setTitle("Are You Sure to delete?")
-            builder.setPositiveButton("I'm sure") { _, _ ->
-                todoData.deleteTask(position, this)
-            }
-            builder.setNegativeButton("Nope") { _, _ -> }
-            builder.show()
-            true
-        }
     }
 
 }

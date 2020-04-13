@@ -3,4 +3,13 @@
     <string name="task" />
     <string name="editTextHint">Enter task:</string>
     <string name="buttonText">add</string>
+    <string name="todoTaskHeader">TodoTask</string>
+    <string name="createdAt">Created at: </string>
+    <string name="taskName">Name: </string>
+    <string name="isComplete">Complete: </string>
+    <string name="userHint" />
+    <string name="done">Done</string>
+    <string name="deleteTask">Delete Task</string>
+    <string name="edited_at">Last edit: </string>
+    <string name="editHint">tap name value to edit it, than click apply</string>
 </resources>
